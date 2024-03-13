@@ -4,6 +4,7 @@ from src.MLProject.exception import CustomException
 from src.MLProject.logger import logging
 import pandas as pd
 from dotenv import load_dotenv
+import pymysql
 
 load_dotenv()
 
@@ -16,7 +17,18 @@ db=os.getenv('db')
 def read_sql_data():
     logging.info("Reading SQL database started")
     try:
-        pass
-    except Exception as e:
-        raise CustomException()
+        mydb=pymysql.connect(
+            host=host,
+            user=user,
+            password=password,
+            db=db
+        )
+        logging.info("Connection Established",mydb)
+        df=pd.read_sql_query('Select * from CreditCard',mydb)
+        print(df.head())
+        
+        return df
+        
+    except Exception as ex:
+        raise CustomException(ex)
     
